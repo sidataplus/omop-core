@@ -1,0 +1,41 @@
+## Forked and modified from https://github.com/docker/awesome-compose/tree/master/postgresql-pgadmin
+
+
+services:
+  omop-pg:
+    container_name: omop-pg #postgres
+    image: postgres:15.3
+    environment:
+      - POSTGRES_USER=${OMOP_PG_USER}
+      - POSTGRES_PASSWORD=${OMOP_PG_PW}
+      - POSTGRES_DB=${OMOP_PG_DB} #optional (specify default database instead of $OMOP_PG_DB)
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes: 
+      # copy the sql script to create tables
+      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ../dwh/omop-ddl/:/docker-entrypoint-initdb.d/
+    networks:
+      - omop-cloudbuild
+
+  omop-pgadmin:
+    container_name: omop-pgadmin #pgadmin4
+    image: dpage/pgadmin4:7.3
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: always
+    networks:
+      - omop-cloudbuild
+
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration
+
+#https://github.com/google/fhir-data-pipes
+#https://github.com/OHDSI/Broadsea

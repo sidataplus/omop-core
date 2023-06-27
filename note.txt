@@ -1,0 +1,24 @@
+python -m venv utils\venv
+utils\venv\Scripts\activate.bat
+
+pip install -r utils\requirements.txt
+
+
+pip freeze > utils\requirements.txt
+
+
+
+
+podman network create omop-cloudbuild
+
+
+
+
+pseudo > deid
+
+
+
+omop-linkage
+
+	> Union on demand, Use only ..
+		> How data should be select/filter? From source pipe or after cdm pipe
