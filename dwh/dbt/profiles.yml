@@ -1,0 +1,11 @@
+omop:
+  target: dev
+  outputs:
+    dev:
+      type: trino
+      method: none
+      user: "{{ env_var('PODMAN_DBT_USER') }}"
+      host: trino # Use container name as URL
+      port: 8080
+      database: omop
+      schema: dbt
