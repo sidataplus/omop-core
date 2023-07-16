@@ -8,10 +8,6 @@ services:
       - PODMAN_CONN_OMOP_USER=${OMOP_PG_USER}
       - PODMAN_CONN_OMOP_PASSWORD=${OMOP_PG_PW}
       - PODMAN_CONN_OMOP_DB=${OMOP_PG_DB}
-    ## Setting for Source DB connection
-      - PODMAN_CONN_SOURCE_CONN_URL=${SOURCE_DB_CONN_URL}
-      - PODMAN_CONN_SOURCE_USER=${SOURCE_DB_USER}
-      - PODMAN_CONN_SOURCE_PASSWORD=${SOURCE_DB_PW}
     ports:
       - "8080:8080" # Chaging port have an affect to Trino config.properties
     restart: always
