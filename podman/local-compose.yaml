@@ -1,0 +1,25 @@
+# local-compose is Local mode where spinned OMOP DB in your machine
+# server-compose is used when starting this machine as server, use this approach for dev or non-production or for host OMOP DB.
+
+services:
+  trino:
+    extends:
+      file: ./compose/trino-compose.yaml
+      service: trino
+    depends_on:
+      - omop-pg
+      
+  omop-pg:
+    extends:
+      file: ./compose/omop-compose.yaml
+      service: omop-pg
+  omop-pgadmin:
+    extends:
+      file: ./compose/omop-compose.yaml
+      service: omop-pgadmin
+
+  
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration

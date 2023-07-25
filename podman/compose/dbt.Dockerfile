@@ -47,8 +47,6 @@ RUN python -m pip install --upgrade pip setuptools wheel --no-cache-dir
 # Set docker basics
 WORKDIR /usr/app/dbt/
 VOLUME /usr/app
-ENTRYPOINT ["dbt"]
-
 
 
 ##
@@ -57,3 +55,6 @@ ENTRYPOINT ["dbt"]
 # FROM dbt-core as dbt-third-party
 FROM ghcr.io/dbt-labs/dbt-core:1.5.1 as dbt-trino
 RUN python -m pip install --no-cache-dir dbt-trino==1.5.0
+
+# ENTRYPOINT ["dbt"]
+ENTRYPOINT ["/bin/bash"]
