@@ -1,0 +1,1 @@
+SELECT 'COWABUNGA!' AS "It''s Work!"

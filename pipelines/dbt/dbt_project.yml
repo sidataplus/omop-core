@@ -1,0 +1,9 @@
+name: 'omop'
+profile: 'omop'
+
+model-paths: ["models"]
+
+models:
+  omop:
+    dev: # Just for dev
+      +materialized: table
