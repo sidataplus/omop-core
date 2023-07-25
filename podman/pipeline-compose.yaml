@@ -1,0 +1,14 @@
+# pipeline-compose is to init dbt and `ssh` into dbt-cli mode, after this you can use dbt command like `dbt debug` `dbt build`
+
+services:
+  dbt:
+    extends:
+      file: ./compose/dbt-compose.yaml
+      service: dbt
+    depends_on:
+      - trino
+  
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration
