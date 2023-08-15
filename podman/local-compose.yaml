@@ -1,3 +1,8 @@
+#####
+# Limitation: Currently not support for Docker, some workaround required to use.
+#####
+
+
 # local-compose is Local mode where spinned OMOP DB in your machine
 # server-compose is used when starting this machine as server, use this approach for dev or non-production or for host OMOP DB.
 
@@ -18,6 +23,9 @@ services:
       file: ./compose/omop-compose.yaml
       service: omop-pgadmin
 
+volumes:
+  omop-db:
+    external: false # False was set because there's no use case for file to be access and to enhance security by limit unnessecery access.
   
 networks:
   omop-cloudbuild:
