@@ -3,3 +3,4 @@ dbt/logs
 dbt/target
 dbt/models/*
 !dbt/models/dev/
+!dbt/models/synthea/
