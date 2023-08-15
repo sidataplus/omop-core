@@ -7,3 +7,9 @@ models:
   omop:
     dev: # Just for dev
       +materialized: table
+      +schema: dbt
+    synthea: # For Synthea Pipeline development
+      ## synthea model was used in unit test development and further experiment
+      # This schema will only active when switching `target` to `synthea` on profiles.yml setting.
+      +enabled: "{{ True if target.name == 'synthea' else False }}"
+      +materialized: table

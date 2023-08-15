@@ -1,0 +1,105 @@
+
+
+models:
+  # Clinic Data Tables
+  - name: person
+    columns:
+      - name: person_id
+        tests:
+          - unique
+          - not_null
+      - name: gender_concept_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [8507, 8532]
+              quote: false # quote = false is for force test case for non-string value (integer)
+          # - relationships:
+          #     to: source('vocab', 'concept')
+          #     field: concept_id
+      - name: year_of_birth
+        tests:
+          - not_null
+      - name: race_concept_id
+        tests:
+          - not_null
+      #     - relationships:
+      #         to: source('vocab', 'concept')
+      #         field: concept_id
+      - name: ethnicity_concept_id
+        tests:
+          - not_null
+      #     - relationships:
+      #         to: source('vocab', 'concept')
+      #         field: concept_id
+      # - name: location_id
+      #   tests:
+      #     - relationships:
+      #         to: ref('location')
+      #         field: location_id
+      # - name: provider_id
+      #   tests:
+      #     - relationships:
+      #         to: ref('provider')
+      #         field: provider_id
+      # - name: care_site_id
+      #   tests:
+      #     - relationships:
+      #         to: ref('care_site')
+      #         field: care_site_id
+      # - name: gender_source_concept_id
+      #   tests:
+      #     - relationships:
+      #         to: source('vocab', 'concept')
+      #         field: concept_id
+      # - name: race_source_concept_id
+      #   tests:
+      #     - relationships:
+      #         to: source('vocab', 'concept')
+      #         field: concept_id
+      # - name: ethnicity_source_concept_id
+      #   tests:
+      #     - relationships:
+      #         to: source('vocab', 'concept')
+      #         field: concept_id
+
+  - name: observation_period
+    columns:
+      - name: observation_period_id
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: observation_period_start_date
+        tests:
+          - not_null
+      - name: observation_period_end_date
+        tests:
+          - not_null
+      - name: period_type_concept_id
+        tests:
+          - not_null
+          # - relationships:
+          #     to: source('vocab', 'concept')
+          #     field: concept_id
+
+sources:
+  - name: synthea
+    database: synthea
+    schema: native
+    tables:
+      - name: patients
+      - name: encounters
+      - name: providers
+      - name: conditions
+      - name: allergies
+      - name: observations
+      - name: procedures
+      - name: devices
+      - name: medications
+      - name: immunizations
