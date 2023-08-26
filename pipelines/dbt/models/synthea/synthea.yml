@@ -11,27 +11,27 @@ models:
       - name: gender_concept_id
         tests:
           - not_null
-          - accepted_values:
-              values: [8507, 8532]
-              quote: false # quote = false is for force test case for non-string value (integer)
-          # - relationships:
-          #     to: source('vocab', 'concept')
-          #     field: concept_id
+          # - accepted_values:
+          #     values: [8507, 8532]
+          #     quote: false # quote = false is for force test case for non-string value (integer)
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
       - name: year_of_birth
         tests:
           - not_null
       - name: race_concept_id
         tests:
           - not_null
-      #     - relationships:
-      #         to: source('vocab', 'concept')
-      #         field: concept_id
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
       - name: ethnicity_concept_id
         tests:
           - not_null
-      #     - relationships:
-      #         to: source('vocab', 'concept')
-      #         field: concept_id
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
       # - name: location_id
       #   tests:
       #     - relationships:
@@ -47,21 +47,21 @@ models:
       #     - relationships:
       #         to: ref('care_site')
       #         field: care_site_id
-      # - name: gender_source_concept_id
-      #   tests:
-      #     - relationships:
-      #         to: source('vocab', 'concept')
-      #         field: concept_id
-      # - name: race_source_concept_id
-      #   tests:
-      #     - relationships:
-      #         to: source('vocab', 'concept')
-      #         field: concept_id
-      # - name: ethnicity_source_concept_id
-      #   tests:
-      #     - relationships:
-      #         to: source('vocab', 'concept')
-      #         field: concept_id
+      - name: gender_source_concept_id
+        tests:
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
+      - name: race_source_concept_id
+        tests:
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
+      - name: ethnicity_source_concept_id
+        tests:
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
 
   - name: observation_period
     columns:
@@ -84,9 +84,9 @@ models:
       - name: period_type_concept_id
         tests:
           - not_null
-          # - relationships:
-          #     to: source('vocab', 'concept')
-          #     field: concept_id
+          - relationships:
+              to: source('vocab', 'concept')
+              field: concept_id
 
 sources:
   - name: synthea
@@ -103,3 +103,17 @@ sources:
       - name: devices
       - name: medications
       - name: immunizations
+  
+  - name: vocab
+    database: vocab # To change vocab db target, create new Trino catalog or change connection setting on `catalog/vocab.properties`
+    schema: vocab
+    tables:
+      - name: concept
+      - name: vocabulary
+      - name: concept_ancestor
+      - name: concept_relationship
+      - name: relationship
+      - name: concept_synonym
+      - name: domain
+      - name: concept_class
+      - name: drug_strength
