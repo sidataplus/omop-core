@@ -93,6 +93,11 @@ RUN installGithub.r OHDSI/ETL-Synthea
 
 RUN R -e "library(DatabaseConnector); downloadJdbcDrivers('postgresql'); downloadJdbcDrivers('redshift'); downloadJdbcDrivers('sql server'); downloadJdbcDrivers('oracle'); downloadJdbcDrivers('spark');"
 
+RUN apt-get install -y libxml2-dev
+# RUN R -e "remotes::install_github(repo = 'OHDSI/Achilles', upgrade = 'always')"
+RUN installGithub.r OHDSI/Achilles
+
+
 # ENV NON_ROOT_USER=test_user
 # ENV NON_ROOT_GID="103" \
 #     NON_ROOT_UID="1003" \
