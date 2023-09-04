@@ -13,6 +13,8 @@ services:
       - "5432:5432"
     restart: always
     volumes: 
+      ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
+      - omop-db:/var/lib/postgresql/data
       # copy the sql script to create tables
       # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - ../dwh/omop-ddl/:/docker-entrypoint-initdb.d/
@@ -31,6 +33,9 @@ services:
     networks:
       - omop-cloudbuild
 
+volumes:
+  omop-db:
+    external: false # False was set because there's no use case for file to be access and to enhance security by limit unnessecery access.
 
 networks:
   omop-cloudbuild:
