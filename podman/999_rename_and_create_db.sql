@@ -1,0 +1,2 @@
+ALTER DATABASE postgres RENAME TO webtools;
+CREATE DATABASE postgres;
