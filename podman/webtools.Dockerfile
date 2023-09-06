@@ -17,8 +17,11 @@ RUN git clone https://github.com/OHDSI/WebAPI && cd WebAPI && git checkout "v2.1
 # - in this order: 1)  DDL, 2) init (populate) sql, and 3) index creation sql
 # (ignore any 'impala' or 'hive' dbms ddl files)
 WORKDIR /tmp/WebAPI/src/main/resources/ddl/results
+# RUN find . -type f -maxdepth 1 -not -regex '.*\(index\|init\|hive\|impala\).*' | xargs cat >/tmp/results_ohdisql.ddl && \
+#     find . -maxdepth 1 -type f \( -name '*init*.sql' ! -name '*hive*.sql' \) | xargs cat >>/tmp/results_ohdisql.ddl && \
+#     find . -maxdepth 1 -type f -name '*index*.sql'| xargs cat >>/tmp/results_ohdisql.ddl
 RUN find . -type f -maxdepth 1 -not -regex '.*\(index\|init\|hive\|impala\).*' | xargs cat >/tmp/results_ohdisql.ddl && \
-    find . -maxdepth 1 -type f \( -name '*init*.sql' ! -name '*hive*.sql' \) | xargs cat >>/tmp/results_ohdisql.ddl && \
+    find . -maxdepth 1 -type f \( -name '*init*.sql' ! -name '*hive*.sql' ! -name '*concept_hierarchy*.sql' \) | xargs cat >>/tmp/results_ohdisql.ddl && \
     find . -maxdepth 1 -type f -name '*index*.sql'| xargs cat >>/tmp/results_ohdisql.ddl
 
 # concatenate the webapi schema flyway migration postgresql SQL files to a single postgresql SQL file - for flyway history baseline version V2.2.5.20180212152023
@@ -80,7 +83,7 @@ RUN wget http://repo.ohdsi.org:8085/nexus/repository/releases/org/ohdsi/sql/SqlR
 
 # Use SqlRender to render and translate the WebAPI results schema tables creation SQL from ohdisql to postgresql SQL
 # RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema demo_cdm_results vocab_schema demo_cdm
-RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema webapi vocab_schema webapi
+RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema dev_results vocab_schema webapi
 
 #-------------------------------------------
 
@@ -103,8 +106,8 @@ ENV PGOPTIONS="--search_path=demo_cdm"
 
 # # copy the below SQL files into the container image - postgresql database will automatically run them in this sequence when it starts up
 
-# # 010 - create empty atlas demo_cdm & atlas demo_cdm_results schemas
-# COPY ./010_create_demo_cdm_schemas.sql /docker-entrypoint-initdb.d/010_create_demo_cdm_schemas.sql
+# 010 - create empty atlas demo_cdm & atlas demo_cdm_results schemas
+COPY ./010_create_demo_cdm_schemas.sql /docker-entrypoint-initdb.d/010_create_demo_cdm_schemas.sql
 
 # # 020 - create atlas demo_cdm schema tables
 # COPY ./020_omop_cdm_postgresql_ddl.sql /docker-entrypoint-initdb.d/020_omop_cdm_postgresql_ddl.sql
@@ -130,8 +133,8 @@ ENV PGOPTIONS="--search_path=demo_cdm"
 # # 060 - create atlas demo_cdm schema table database constraints - referential integrity
 # #COPY ./060_omop_cdm_postgresql_constraints.sql /docker-entrypoint-initdb.d/060_omop_cdm_postgresql_constraints.sql
 
-# # 065 - create the atlas demo_cdm_results schema tables - the concatenated files were generated as a single postgresql SQL file using the intermediate container builder
-# COPY --from=builder-image /tmp/results_postgresql.ddl /docker-entrypoint-initdb.d/065_results_schema_ddl_postgresql.sql
+# 065 - create the atlas demo_cdm_results schema tables - the concatenated files were generated as a single postgresql SQL file using the intermediate container builder
+COPY --from=builder-image /tmp/results_postgresql.ddl /docker-entrypoint-initdb.d/065_results_schema_ddl_postgresql.sql
 
 # 070 - create an empty webapi schema
 COPY ./070_create_webapi_schema_postgresql.sql /docker-entrypoint-initdb.d/070_create_webapi_schema_postgresql.sql
