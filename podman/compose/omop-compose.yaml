@@ -5,6 +5,8 @@ services:
   omop-pg:
     container_name: omop-pg #postgres
     image: postgres:15.3
+    command: postgres -c config_file=/etc/postgresql.conf
+    shm_size: '2g'
     environment:
       - POSTGRES_USER=${OMOP_PG_USER}
       - POSTGRES_PASSWORD=${OMOP_PG_PW}
@@ -15,6 +17,8 @@ services:
     volumes: 
       ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
       - omop-db:/var/lib/postgresql/data
+      ## Using config file; https://stackoverflow.com/a/41912295
+      - ../dwh/postgresql.conf:/etc/postgresql.conf
       # copy the sql script to create tables
       # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - ../dwh/omop-ddl/:/docker-entrypoint-initdb.d/
