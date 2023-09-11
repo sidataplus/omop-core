@@ -1,0 +1,102 @@
+version: '3'
+
+volumes:
+  atlas-pg-db:
+    name: atlas-pg-db
+
+services:
+  atlas-pg:
+    container_name: atlas-pg #postgres
+    # image: postgres:15.3
+    # image: ohdsi/broadsea-atlasdb:2.0.0
+    build:
+      # context: compose/.
+      context: .
+      dockerfile: webtools.Dockerfile
+    cpus: 2
+    mem_limit: "2G"
+    environment:
+      - POSTGRES_USER=${WEBAPI_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${WEBAPI_DATASOURCE_PASSWORD}
+      - POSTGRES_DB=webtools #optional (specify default database instead of $OMOP_PG_DB)
+    ports:
+      - "58801:5432"
+    restart: always
+    volumes: 
+      ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
+      - atlas-pg-db:/var/lib/postgresql/data
+      # copy the sql script to create tables
+      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      # - ./pop.sql:/docker-entrypoint-initdb.d/
+      - ./pop.sql:/docker-entrypoint-initdb.d/pop.sql
+    networks:
+      - omop-cloudbuild
+
+
+  ohdsi-webapi:
+    container_name: ohdsi-webapi
+    image: ohdsi/webapi:2.13.0
+    ports:
+      - 8080:8080
+    environment:
+      DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      DATASOURCE_URL: ${WEBAPI_DATASOURCE_URL}
+      DATASOURCE_USERNAME: ${WEBAPI_DATASOURCE_USERNAME}
+      DATASOURCE_PASSWORD: ${WEBAPI_DATASOURCE_PASSWORD}
+      DATASOURCE_OHDSI_SCHEMA: ${WEBAPI_DATASOURCE_OHDSI_SCHEMA}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: ${WEBAPI_DATASOURCE_OHDSI_SCHEMA}
+      SPRING_BATCH_REPOSITORY_TABLEPREFIX: ${WEBAPI_DATASOURCE_OHDSI_SCHEMA}.BATCH_
+      FLYWAY_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      FLYWAY_DATASOURCE_URL: ${WEBAPI_DATASOURCE_URL}
+      FLYWAY_DATASOURCE_USERNAME: ${WEBAPI_DATASOURCE_USERNAME}
+      FLYWAY_DATASOURCE_PASSWORD: ${WEBAPI_DATASOURCE_PASSWORD}
+      FLYWAY_LOCATIONS: classpath:db/migration/postgresql
+      FLYWAY_PLACEHOLDERS_OHDSISCHEMA: ${WEBAPI_DATASOURCE_OHDSI_SCHEMA}
+      FLYWAY_SCHEMAS: ${WEBAPI_DATASOURCE_OHDSI_SCHEMA}
+      FLYWAY_BASELINEONMIGRATE: "true"
+      FLYWAY_TABLE: schema_history
+      flyway_baselineVersionAsString: "2.2.5.20180212152023"  # this env var is case sensitive
+      FLYWAY_BASELINEDESCRIPTION: Base Migration
+      SECURITY_CORS_ENABLED: "true"
+      # SECURITY_ORIGIN: "http://127.0.0.1"
+      SECURITY_ORIGIN: "http://localhost:8081"
+      # SOLR_ENDPOINT: "${SOLR_VOCAB_ENDPOINT}"
+    depends_on:
+      - atlas-pg
+    networks:
+      - omop-cloudbuild
+
+
+  ohdsi-atlas:
+    container_name: ohdsi-atlas
+    image: ohdsi/atlas:2.13.0
+    ports:
+      - 8081:8080
+    environment:
+      WEBAPI_HOST: ${BROADSEA_HOST}
+      WEBAPI_URL: ${BROADSEA_HOST}/WebAPI
+      ATLAS_INSTANCE_NAME: ${ATLAS_INSTANCE_NAME}
+      ATLAS_COHORT_COMPARISON_RESULTS_ENABLED: ${ATLAS_COHORT_COMPARISON_RESULTS_ENABLED}
+      ATLAS_USER_AUTH_ENABLED: ${ATLAS_USER_AUTH_ENABLED}
+      ATLAS_PLP_RESULTS_ENABLED: ${ATLAS_PLP_RESULTS_ENABLED}
+      ATLAS_SECURITY_PROVIDER_NAME: ${ATLAS_SECURITY_PROVIDER_NAME}
+      ATLAS_SECURITY_PROVIDER_TYPE: ${ATLAS_SECURITY_PROVIDER_TYPE}
+      ATLAS_SECURITY_ICON: ${ATLAS_SECURITY_ICON}
+      ATLAS_SECURITY_USE_FORM: ${ATLAS_SECURITY_USE_FORM}
+      ATLAS_SECURITY_USE_AJAX: ${ATLAS_SECURITY_USE_AJAX}
+    volumes:
+      - ./atlas/config-local.js:/tmp/config-local.js:ro
+      - ./atlas/envsubst.sh:/tmp/envsubst.sh:ro
+    entrypoint: ["sh", "/tmp/envsubst.sh" ]
+    depends_on:
+      - atlas-pg
+      - ohdsi-webapi
+    networks:
+      - omop-cloudbuild
+
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration
