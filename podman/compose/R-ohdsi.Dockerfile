@@ -97,6 +97,8 @@ RUN apt-get install -y libxml2-dev
 # RUN R -e "remotes::install_github(repo = 'OHDSI/Achilles', upgrade = 'always')"
 RUN installGithub.r OHDSI/Achilles
 
+RUN installGithub.r OHDSI/DataQualityDashboard
+
 
 # ENV NON_ROOT_USER=test_user
 # ENV NON_ROOT_GID="103" \
