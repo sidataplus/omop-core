@@ -18,7 +18,6 @@
 --     CONSTRAINT PK_source_daimon PRIMARY KEY (source_daimon_id) 
 -- );
 
-
 -- remove any previously added database connection configuration data
 truncate webapi.source;
 truncate webapi.source_daimon;
@@ -26,7 +25,7 @@ truncate webapi.source_daimon;
 -- OHDSI CDM source
 INSERT INTO webapi.source( source_id, source_name, source_key, source_connection, source_dialect)
 VALUES (1, 'OMOP Development under TCEL Funds by SiData', 'DEV_TCEL',
-  'jdbc:postgresql://atlas-pg:5432/webtools?user=postgres&password=mypass', 'postgresql');
+  'jdbc:postgresql://ohdsi-webapi-pg:5432/webtools?user=postgres&password=mypass', 'postgresql');
 
 -- CDM daimon
 -- INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, table_qualifier, priority) VALUES (1, 1, 0, 'cdm', 0);

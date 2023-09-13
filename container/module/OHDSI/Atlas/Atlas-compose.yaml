@@ -1,14 +1,25 @@
 version: '3'
 
+###
+# Note:
+# OHDSI-Atlas is runnable without any dependency, but can operate nothing without OHDSI-WebAPI,
+# Setup `depends-on` or start container in order is recommended.
+###
+
 services:
   ohdsi-atlas:
     container_name: ohdsi-atlas
     image: ohdsi/atlas:2.13.0
+    # build:
+    #   context: .
+    #   dockerfile: Atlas.Dockerfile
     ports:
       - 8081:8080
     environment:
       WEBAPI_HOST: ${BROADSEA_HOST}
       WEBAPI_URL: ${BROADSEA_HOST}/WebAPI
+      # WEBAPI_PORT: ${WEBAPI_PORT}
+      WEBAPI_PORT: 8080
       ATLAS_INSTANCE_NAME: ${ATLAS_INSTANCE_NAME}
       ATLAS_COHORT_COMPARISON_RESULTS_ENABLED: ${ATLAS_COHORT_COMPARISON_RESULTS_ENABLED}
       ATLAS_USER_AUTH_ENABLED: ${ATLAS_USER_AUTH_ENABLED}
@@ -19,11 +30,15 @@ services:
       ATLAS_SECURITY_USE_FORM: ${ATLAS_SECURITY_USE_FORM}
       ATLAS_SECURITY_USE_AJAX: ${ATLAS_SECURITY_USE_AJAX}
     volumes:
-      - ./atlas/config-local.js:/tmp/config-local.js:ro
-      - ./atlas/envsubst.sh:/tmp/envsubst.sh:ro
+      - ./src/config-local.js:/tmp/config-local.js:ro
+      - ./src/envsubst.sh:/tmp/envsubst.sh:ro
     entrypoint: ["sh", "/tmp/envsubst.sh" ]
+    # depends_on:
+    #   - ohdsi-webapi-pg
+    #   - ohdsi-webapi
     networks:
       - omop-cloudbuild
+
 
 networks:
   omop-cloudbuild:

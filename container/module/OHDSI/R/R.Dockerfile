@@ -1,4 +1,4 @@
-## Forked from https://github.com/OHDSI/Hades/blob/main/Dockerfile
+## Forked from https://github.com/OHDSI/Hades/blob/v1.13.0/Dockerfile
 
 # syntax=docker/dockerfile:1
 FROM rocker/rstudio:4.3.1

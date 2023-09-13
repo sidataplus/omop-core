@@ -1,0 +1,28 @@
+
+
+- container/
+  - file # store .containerfile file
+  - compose # store container-compose.yaml file
+    - product-compose.yaml
+  - module
+    - OHDSI # Relate to external tools, have to spin-off to individual repo in further plan
+      - [Any Module Name]
+        - src # Store additional resource for building image/container
+        - *.Dockerfile
+        - *-compose.yaml
+        - .env
+    - TCEL # Relate to newly development based on "TCEL" project
+      - ./. WIP
+  - podman # Verified product of container compose version of podman
+    - .env
+    - *-compose.yaml
+  - docker # Verified product of container compose version of docker
+    - ./. WIP
+
+
+# Product of container compose, and their module:
+- webtools
+  - OHDSI
+    - Atlas
+    - R
+    - WebAPI

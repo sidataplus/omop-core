@@ -4,8 +4,8 @@ services:
   rstudio-server:
     container_name: rstudio-server
     build:
-      context: compose/.
-      dockerfile: R-ohdsi.Dockerfile
+      context: .
+      dockerfile: R.Dockerfile
     ports:
       - 8787:8787
       - 6311:6311
