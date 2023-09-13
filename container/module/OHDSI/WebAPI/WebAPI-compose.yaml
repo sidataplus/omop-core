@@ -1,34 +1,29 @@
 version: '3'
 
 volumes:
-  atlas-pg-db:
-    name: atlas-pg-db
+  ohdsi-webapi-db:
+    name: ohdsi-webapi-db
 
 services:
-  atlas-pg:
-    container_name: atlas-pg #postgres
+  ohdsi-webapi-pg:
+    container_name: ohdsi-webapi-pg #postgres
     # image: postgres:15.3
     # image: ohdsi/broadsea-atlasdb:2.0.0
     build:
-      # context: compose/.
       context: .
-      dockerfile: webtools.Dockerfile
+      dockerfile: WebAPI.Dockerfile
     cpus: 2
     mem_limit: "2G"
     environment:
       - POSTGRES_USER=${WEBAPI_DATASOURCE_USERNAME}
       - POSTGRES_PASSWORD=${WEBAPI_DATASOURCE_PASSWORD}
-      - POSTGRES_DB=webtools #optional (specify default database instead of $OMOP_PG_DB)
+      - POSTGRES_DB=webtools #optional
     ports:
       - "58801:5432"
     restart: always
     volumes: 
-      ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
-      - atlas-pg-db:/var/lib/postgresql/data
-      # copy the sql script to create tables
-      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-      # - ./pop.sql:/docker-entrypoint-initdb.d/
-      - ./pop.sql:/docker-entrypoint-initdb.d/pop.sql
+      ## Mount Postgres-db file to `ohdsi-webapi-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
+      - ohdsi-webapi-db:/var/lib/postgresql/data
     networks:
       - omop-cloudbuild
 
@@ -63,35 +58,7 @@ services:
       SECURITY_ORIGIN: "http://localhost:8081"
       # SOLR_ENDPOINT: "${SOLR_VOCAB_ENDPOINT}"
     depends_on:
-      - atlas-pg
-    networks:
-      - omop-cloudbuild
-
-
-  ohdsi-atlas:
-    container_name: ohdsi-atlas
-    image: ohdsi/atlas:2.13.0
-    ports:
-      - 8081:8080
-    environment:
-      WEBAPI_HOST: ${BROADSEA_HOST}
-      WEBAPI_URL: ${BROADSEA_HOST}/WebAPI
-      ATLAS_INSTANCE_NAME: ${ATLAS_INSTANCE_NAME}
-      ATLAS_COHORT_COMPARISON_RESULTS_ENABLED: ${ATLAS_COHORT_COMPARISON_RESULTS_ENABLED}
-      ATLAS_USER_AUTH_ENABLED: ${ATLAS_USER_AUTH_ENABLED}
-      ATLAS_PLP_RESULTS_ENABLED: ${ATLAS_PLP_RESULTS_ENABLED}
-      ATLAS_SECURITY_PROVIDER_NAME: ${ATLAS_SECURITY_PROVIDER_NAME}
-      ATLAS_SECURITY_PROVIDER_TYPE: ${ATLAS_SECURITY_PROVIDER_TYPE}
-      ATLAS_SECURITY_ICON: ${ATLAS_SECURITY_ICON}
-      ATLAS_SECURITY_USE_FORM: ${ATLAS_SECURITY_USE_FORM}
-      ATLAS_SECURITY_USE_AJAX: ${ATLAS_SECURITY_USE_AJAX}
-    volumes:
-      - ./atlas/config-local.js:/tmp/config-local.js:ro
-      - ./atlas/envsubst.sh:/tmp/envsubst.sh:ro
-    entrypoint: ["sh", "/tmp/envsubst.sh" ]
-    depends_on:
-      - atlas-pg
-      - ohdsi-webapi
+      - ohdsi-webapi-pg
     networks:
       - omop-cloudbuild
 

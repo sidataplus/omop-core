@@ -3,8 +3,9 @@ define([], function () {
 
 	var getUrl = window.location;
 	// var baseUrl = getUrl.protocol + "//" + getUrl.host;
-	var baseUrl = getUrl.protocol + "//" + "$WEBAPI_HOST";
-	
+	// var baseUrl = getUrl.protocol + "//" + "$WEBAPI_HOST";
+	var baseUrl = getUrl.protocol + "//" + getUrl.hostname + ":$WEBAPI_PORT";
+
 	// WebAPI
 	configLocal.webAPIRoot = baseUrl + '/WebAPI/';
 	configLocal.api = {
