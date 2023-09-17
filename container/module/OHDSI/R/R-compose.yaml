@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  rstudio-server:
+    container_name: rstudio-server
+    build:
+      context: .
+      dockerfile: R.Dockerfile
+    ports:
+      - 8787:8787
+      - 6311:6311
+    volumes:
+      - ./rstudio/home:/home
+      - ./rstudio/tmp:/tmp
+    environment:
+      # - USER=rstudio
+      - PASSWORD=${RSERVER_PW}
+      # - ROOT=TRUE
+    networks:
+      - omop-cloudbuild
+
+
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration
