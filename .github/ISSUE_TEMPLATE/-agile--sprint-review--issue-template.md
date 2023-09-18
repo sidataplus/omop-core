@@ -29,7 +29,20 @@ This epic is on the way.
 ### Fix
 
 - x (#x)
+- N/A - No hot fix task this sprint
 
 ### Postponed / Changed
 
 - x (#x)
+- N/A - No task postponed or changed this sprint
+
+### Issue Raised (Won't Fix)
+#### Critical
+
+- x (#x)
+- N/A - No critical issue raised this sprint
+
+#### Optional
+
+- x (#x)
+- N/A - No optional issue raised this sprint
