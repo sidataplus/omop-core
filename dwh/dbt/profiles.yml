@@ -17,3 +17,5 @@ omop:
       port: 8080
       database: cdm
       schema: synthea
+      retries: 30
+      threads: 1
