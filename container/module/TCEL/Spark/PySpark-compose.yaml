@@ -25,6 +25,7 @@ services:
       - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
       - ./src/crosspipe/:/opt/spark/crosspipe/:ro
     environment:
+      SPARK_DRIVER_MEMORY: 2 # In GB
       JDBC_SOURCE_URL: "jdbc:postgresql://omop-pg:5432/omop_yourorg"
       JDBC_SOURCE_USERNAME: "omopuser"
       JDBC_SOURCE_PASSWORD: "P@ssw0rd"

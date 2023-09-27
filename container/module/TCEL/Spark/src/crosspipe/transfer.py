@@ -15,7 +15,6 @@ import os
 # Initialize a Spark session
 spark = SparkSession.builder \
     .appName("PostgreSQLDataTransfer") \
-    .config('spark.ui.showConsoleProgress', 'true') \
     .getOrCreate()
 
 # spark = SparkSession.builder.appName("ETL").config('spark.ui.showConsoleProgress', 'true').getOrCreate()
@@ -127,6 +126,7 @@ heartbeat_thread.daemon = True  # Allow the thread to exit when the main program
 heartbeat_thread.start()
 
 # Read data from the source PostgreSQL table for each table in tbls_cdm list and write to target table
+print("Working on cdm transfer:")
 for i, tbl in enumerate(tbls_cdm):
     try:
         print(f"[{i+1}/{len(tbls_cdm)}] Reading data from source database for table '{tbl}'...")
@@ -149,6 +149,7 @@ for i, tbl in enumerate(tbls_cdm):
         print(f"[{i+1}/{len(tbls_cdm)}] Table '{tbl}' does not exist in the source database. Skipping to next table.\n")
 
 # Read data from the source PostgreSQL table for each table in tbls_vocab list and write to target table
+print("Working on vocab transfer:")
 for i, tbl in enumerate(tbls_vocab):
     try:
         print(f"[{i+1}/{len(tbls_vocab)}] Reading data from source database for table '{tbl}'...")
