@@ -18,6 +18,9 @@
 
 
 import typer
+import subprocess
+import os
+
 
 app = typer.Typer(add_completion=False, help="CrossPipe CLI for OMOP ETL")
 
@@ -28,8 +31,12 @@ def transfer():
     Transfer data from source to target, Where cdm_a and cdm_b pre-defined
 
     Use command build to combine both cdm_a and cdm_b to temp
+
+    ### Development: beta-crosspipeline-transfer:
+
+    #   Working with JDBC_SOURCE and JDBC_TARGET as cdm_a and cdm_b
     """
-    print("transfer: Working on it")
+    subprocess.call(['/opt/spark/bin/spark-submit', '--driver-memory', str(int(os.environ['SPARK_DRIVER_MEMORY'])*2)+'g', 'transfer.py'])
 
 
 @app.command()

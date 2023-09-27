@@ -25,4 +25,22 @@ services:
       - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
       - ./src/crosspipe/:/opt/spark/crosspipe/:ro
     environment:
-      FOO: "bar"
+      SPARK_DRIVER_MEMORY: 2 # In GB
+      JDBC_SOURCE_URL: "jdbc:postgresql://omop-pg:5432/omop_yourorg"
+      JDBC_SOURCE_USERNAME: "omopuser"
+      JDBC_SOURCE_PASSWORD: "P@ssw0rd"
+      JDBC_SOURCE_SCHEMA_CDM: "synthea"
+      JDBC_SOURCE_SCHEMA_VOCAB: "vocab"
+      JDBC_TARGET_URL: "jdbc:postgresql://ohdsi-webapi-pg:5432/webtools"
+      JDBC_TARGET_USERNAME: "postgres"
+      JDBC_TARGET_PASSWORD: "mypass"
+      JDBC_TARGET_SCHEMA_CDM: "webapi"
+      JDBC_TARGET_SCHEMA_VOCAB: "webapi"
+    
+    networks:
+      - omop-cloudbuild
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration
