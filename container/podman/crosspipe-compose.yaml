@@ -1,0 +1,33 @@
+
+services:
+  crosspipe-pg:
+    extends:
+      file: ../module/TCELS/OMOP/omop-compose.yaml
+      service: crosspipe-pg
+    container_name: crosspipe-pg
+    environment:
+      - POSTGRES_USER=crosspipe
+      - POSTGRES_PASSWORD=P@ssw0rd
+      - POSTGRES_DB=crosspipe
+    volumes:
+      - crosspipe-db:/var/lib/postgresql/data
+      - ../../dwh/postgresql.conf:/etc/postgresql.conf
+      # - ../../dwh/omop-ddl/:/docker-entrypoint-initdb.d/
+      - ../module/TCELS/OMOP/src/dwh/crosspipe-ddl/:/docker-entrypoint-initdb.d/
+  
+  crosspipe-cli:
+    extends:
+      file: ../module/TCELS/Spark/PySpark-compose.yaml
+      service: pyspark
+    container_name: crosspipe-cli
+    volumes:
+      - ../module/TCELS/Spark/src/crosspipe/:/opt/spark/crosspipe/:ro
+
+volumes:
+  crosspipe-db:
+    external: false # False was set because there's no use case for file to be access and to enhance security by limit unnessecery access.
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration

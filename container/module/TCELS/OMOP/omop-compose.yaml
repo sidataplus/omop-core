@@ -1,0 +1,68 @@
+## Forked and modified from https://github.com/docker/awesome-compose/tree/master/postgresql-pgadmin
+
+
+services:
+  omop-pg:
+    container_name: omop-pg #postgres
+    image: postgres:15.3
+    command: postgres -c config_file=/etc/postgresql.conf
+    shm_size: '2g'
+    environment:
+      - POSTGRES_USER=${OMOP_PG_USER}
+      - POSTGRES_PASSWORD=${OMOP_PG_PW}
+      - POSTGRES_DB=${OMOP_PG_DB} #optional (specify default database instead of $OMOP_PG_DB)
+    ports:
+      - ${PG_EXPOSE_PORT}:5432
+    restart: always
+    volumes: 
+      ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
+      - omop-db:/var/lib/postgresql/data
+      ## Using config file; https://stackoverflow.com/a/41912295
+      - ./src/dwh/postgresql.conf:/etc/postgresql.conf
+      - ./src/dwh/omop-ddl/:/docker-entrypoint-initdb.d/
+    networks:
+      - omop-cloudbuild
+
+  crosspipe-pg:
+    container_name: crosspipe-pg #postgres
+    image: postgres:15.3
+    command: postgres -c config_file=/etc/postgresql.conf
+    shm_size: '2g'
+    environment:
+      - POSTGRES_USER=${OMOP_PG_USER}
+      - POSTGRES_PASSWORD=${OMOP_PG_PW}
+      - POSTGRES_DB=${OMOP_PG_DB} #optional (specify default database instead of $OMOP_PG_DB)
+    ports:
+      - ${CROSSPIPE_PG_PORT}:5432
+    restart: always
+    volumes: 
+      ## Mount Postgres-db file to `omop-db`; Read more at https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata
+      - crosspipe-db:/var/lib/postgresql/data
+      ## Using config file; https://stackoverflow.com/a/41912295
+      # - ./src/dwh/postgresql.conf:/etc/postgresql.conf
+      # - ./src/dwh/omop-ddl/:/docker-entrypoint-initdb.d/
+    networks:
+      - omop-cloudbuild
+
+  omop-pgadmin:
+    container_name: omop-pgadmin #pgadmin4
+    image: dpage/pgadmin4:7.3
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: always
+    networks:
+      - omop-cloudbuild
+
+volumes:
+  omop-db:
+    external: false # False was set because there's no use case for file to be access and to enhance security by limit unnessecery access.
+  crosspipe-db:
+    external: false
+
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration

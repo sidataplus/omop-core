@@ -19,10 +19,10 @@ services:
     ## python3 /opt/spark/python/pyspark/start_inject.py
     # command: [""]
     volumes:
-      - ./inject.py:/opt/spark/python/pyspark/inject.py:ro
-      - ./start_inject.py:/opt/spark/python/pyspark/start_inject.py:ro
-      - ./start_inject.sh:/opt/spark/python/pyspark/start_inject.sh:ro
-      - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
+      # - ./inject.py:/opt/spark/python/pyspark/inject.py:ro
+      # - ./start_inject.py:/opt/spark/python/pyspark/start_inject.py:ro
+      # - ./start_inject.sh:/opt/spark/python/pyspark/start_inject.sh:ro
+      # - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
       - ./src/crosspipe/:/opt/spark/crosspipe/:ro
     environment:
       SPARK_DRIVER_MEMORY: 2 # In GB
@@ -31,11 +31,17 @@ services:
       JDBC_SOURCE_PASSWORD: "P@ssw0rd"
       JDBC_SOURCE_SCHEMA_CDM: "synthea"
       JDBC_SOURCE_SCHEMA_VOCAB: "vocab"
-      JDBC_TARGET_URL: "jdbc:postgresql://ohdsi-webapi-pg:5432/webtools"
-      JDBC_TARGET_USERNAME: "postgres"
-      JDBC_TARGET_PASSWORD: "mypass"
-      JDBC_TARGET_SCHEMA_CDM: "webapi"
-      JDBC_TARGET_SCHEMA_VOCAB: "webapi"
+      # JDBC_TARGET_URL: "jdbc:postgresql://ohdsi-webapi-pg:5432/webtools"
+      # JDBC_TARGET_USERNAME: "postgres"
+      # JDBC_TARGET_PASSWORD: "mypass"
+      # JDBC_TARGET_SCHEMA_CDM: "webapi"
+      # JDBC_TARGET_SCHEMA_VOCAB: "webapi"
+
+      JDBC_TARGET_URL: "jdbc:postgresql://crosspipe-pg:5432/crosspipe"
+      JDBC_TARGET_USERNAME: "crosspipe"
+      JDBC_TARGET_PASSWORD: "P@ssw0rd"
+      JDBC_TARGET_SCHEMA_CDM: "cdm"
+      JDBC_TARGET_SCHEMA_VOCAB: "vocab"
     
     networks:
       - omop-cloudbuild
