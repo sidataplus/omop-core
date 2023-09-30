@@ -20,10 +20,10 @@ SELECT
     cast(NULL as integer) AS care_site_id,
     av.encounter_id AS visit_source_value,
     0 AS visit_source_concept_id, 
-    0 AS admitting_source_concept_id,
-    cast(NULL as varchar) AS admitting_source_value,
-    0 AS discharge_to_concept_id, 
-    cast(NULL as varchar) AS discharge_to_source_value, 
+    0 AS admitted_from_concept_id,
+    cast(NULL as varchar) AS admitted_from_source_value,
+    0 AS discharged_to_concept_id, 
+    cast(NULL as varchar) AS discharged_to_source_value, 
     lag(av.visit_occurrence_id) 
     OVER(PARTITION BY p.person_id
                       ORDER BY av.visit_start_date) AS preceding_visit_occurrence_id

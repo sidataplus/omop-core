@@ -3,7 +3,7 @@ services:
   rstudio-server:
     extends:
       # file: ../compose/R-compose.yaml
-      file: ../module/OHDSI/R/compose.yaml
+      file: ../module/OHDSI/R/R-compose.yaml
       service: rstudio-server
     volumes:
       - ../../webtools/rstudio/home:/home

@@ -12,8 +12,8 @@ services:
     build:
       context: .
       dockerfile: WebAPI.Dockerfile
-    cpus: 2
-    mem_limit: "2G"
+    # cpus: 2
+    shm_size: 2gb
     environment:
       - POSTGRES_USER=${WEBAPI_DATASOURCE_USERNAME}
       - POSTGRES_PASSWORD=${WEBAPI_DATASOURCE_PASSWORD}

@@ -1,0 +1,5 @@
+CREATE SCHEMA cdm;
+CREATE SCHEMA vocab;
+CREATE SCHEMA webapi;
+CREATE SCHEMA results;
+CREATE SCHEMA crosspipe;

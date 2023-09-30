@@ -1,0 +1,2 @@
+You have to include submoudle of dbt model repo here;
+Or just ignore this folder, do not commit your model into `omop-core`
