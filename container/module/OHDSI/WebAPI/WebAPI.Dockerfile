@@ -83,7 +83,8 @@ RUN wget http://repo.ohdsi.org:8085/nexus/repository/releases/org/ohdsi/sql/SqlR
 
 # Use SqlRender to render and translate the WebAPI results schema tables creation SQL from ohdisql to postgresql SQL
 # RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema demo_cdm_results vocab_schema demo_cdm
-RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema dev_results vocab_schema webapi
+RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render cdm_schema cdm results_schema results vocab_schema vocab
+# RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl -translate postgresql -render results_schema dev_results vocab_schema webapi
 
 #-------------------------------------------
 
@@ -109,11 +110,15 @@ ENV PGOPTIONS="--search_path=demo_cdm"
 # 010 - create empty atlas demo_cdm & atlas demo_cdm_results schemas
 COPY ./src/010_create_demo_cdm_schemas.sql /docker-entrypoint-initdb.d/010_create_demo_cdm_schemas.sql
 
-# # 020 - create atlas demo_cdm schema tables
-# COPY ./src/020_omop_cdm_postgresql_ddl.sql /docker-entrypoint-initdb.d/020_omop_cdm_postgresql_ddl.sql
+# 020 - create atlas demo_cdm schema tables
+COPY ./src/020_omop_cdm_postgresql_ddl.sql /docker-entrypoint-initdb.d/020_omop_cdm_postgresql_ddl.sql
+
+# NB: SQL 021 is split from 020 to separate the vocab schema creation from the cdm schema creation
+# 021 - create atlas vocab schema tables
+COPY ./src/021_omop_vocab_postgresql_ddl.sql /docker-entrypoint-initdb.d/021_omop_vocab_postgresql_ddl.sql
 
 # # 030 - create empty achilles tables in the atlas demo_cdm_results schema
-# COPY ./src/030_achilles_postgresql_ddl.sql /docker-entrypoint-initdb.d/030_achilles_postgresql_ddl.sql
+COPY ./src/030_achilles_postgresql_ddl.sql /docker-entrypoint-initdb.d/030_achilles_postgresql_ddl.sql
 
 # # 035 - create concept_recommended table in the atlas demo_cdm schema for Atlas Phoebe recommendations functionality
 # COPY ./src/035_concept_recommended.ddl.sql /docker-entrypoint-initdb.d/035_concept_recommended.ddl.sql
@@ -165,8 +170,9 @@ COPY ./src/100_populate_source_source_daimon.sql /docker-entrypoint-initdb.d/100
 # # 140 - load demo Atlas concept set definitions
 # COPY ./src/140_load_demo_atlas_conceptset_definitions.sql /docker-entrypoint-initdb.d/140_load_sample_atlas_conceptset_definitions.sql
 
-# # 999 - rename and create db
-# COPY ./src/999_rename_and_create_db.sql /docker-entrypoint-initdb.d/999_rename_and_create_db.sql
+### 99X - crosspipe utility, not used in the OHDSI/WebAPI project, but is customized for the use with CrossPipe.
+# # 991 - rename and create db
+COPY ./src/991_crosspipe_utility.sql /docker-entrypoint-initdb.d/991_crosspipe_utility.sql
 
 RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
 
