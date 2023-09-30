@@ -56,19 +56,39 @@ def validate():
 
 
 @app.command()
-def backup():
+def backup(
+    atlas_db: typing_extensions.Annotated[str, typer.Argument(help="Accept value is ATLAS DB: ['ATLAS' *Recommended*, 'CROSSPIPE', 'OMOP']")] = "ATLAS", 
+    force: typing_extensions.Annotated[
+        bool, typer.Option(prompt=f"Are you sure to overwrite on the CrossPipe Temp DB?\nOnly one backup is allowed at a time.")
+    ] = False,
+):
     """
     Clone ATLAS DB the configuration and user footprints information to temp db.
     """
-    print("backup: Working on it")
+    if force:
+        crosspipe_db = "CROSSPIPE"
+        print(f"Backing up ATLAS DB from {atlas_db} to {crosspipe_db}")
+        subprocess.call(['/opt/spark/bin/spark-submit', '--driver-memory', str(int(os.environ['SPARK_DRIVER_MEMORY'])*2)+'g', 'backup.py', atlas_db, crosspipe_db])
+    else:
+        print("Backup Canceled")
 
 
 @app.command()
-def restore():
+def restore(
+    atlas_db: typing_extensions.Annotated[str, typer.Argument(help="Accept value is ATLAS DB: ['ATLAS' *Recommended*, 'CROSSPIPE', 'OMOP']")] = "ATLAS", 
+    force: typing_extensions.Annotated[
+        bool, typer.Option(prompt=f"Are you sure to overwrite on the current ATLAS DB?\nAll further information from backup will lost forever.")
+    ] = False,
+):
     """
     From temp db, restore those configuration and user footprints information back to ATLAS DB.
     """
-    print("restore: Working on it")
+    if force:
+        crosspipe_db = "CROSSPIPE"
+        print(f"Restoring ATLAS DB from, {crosspipe_db} to {atlas_db}")
+        subprocess.call(['/opt/spark/bin/spark-submit', '--driver-memory', str(int(os.environ['SPARK_DRIVER_MEMORY'])*2)+'g', 'backup.py', crosspipe_db, atlas_db])
+    else:
+        print("Restoration Canceled")
 
 
 if __name__ == "__main__":
