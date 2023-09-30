@@ -1,0 +1,33 @@
+
+
+services:
+  trino:
+    extends:
+      file: ../module/unreleased/Trino/trino-compose.yaml
+      service: trino
+    volumes:
+      - ../../dwh/trino/etc/:/etc/trino
+    depends_on:
+      - omop-pg
+      
+  omop-pg:
+    extends:
+      file: ../module/TCELS/OMOP/omop-compose.yaml
+      service: omop-pg
+    volumes:
+      - ../../dwh/postgresql.conf:/etc/postgresql.conf
+      - ../../dwh/omop-ddl/:/docker-entrypoint-initdb.d/
+
+  omop-pgadmin:
+    extends:
+      file: ../module/TCELS/OMOP/omop-compose.yaml
+      service: omop-pgadmin
+
+volumes:
+  omop-db:
+    external: false # False was set because there's no use case for file to be access and to enhance security by limit unnessecery access.
+  
+networks:
+  omop-cloudbuild:
+    external: true
+    name: omop-cloudbuild # Needed for Continuous integration

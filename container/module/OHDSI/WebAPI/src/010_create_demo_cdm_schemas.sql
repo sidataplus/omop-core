@@ -1,1 +1,4 @@
-CREATE SCHEMA dev_results
+CREATE SCHEMA cdm;
+CREATE SCHEMA results;
+
+CREATE SCHEMA vocab;

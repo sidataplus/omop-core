@@ -1,0 +1,71 @@
+
+Usage of this library:
+
+(cli:)$ crosspipe [COMMAND]
+
+which available command were listed below:
+
+
+transfer
+    """
+
+    Where cdm_a and cdm_b pre-defined
+
+    Use command linkage to combine both cdm_a and cdm_b to temp
+    """
+    --from cdm_a , cdm_b , temp , webapi , <but not itself> | default: cdm_a
+    --to cdm_a , cdm_b , temp , webapi , <but not itself> | default: temp
+    --no-cdm_a
+    --no-vocab
+
+
+build
+    """
+    Completly transfer all temp instance of OMOP to analytics instance
+
+    Error raised if pre-validate is failed, use --force to bypass this
+    """
+    --no-vocab
+    --no-cache
+    --force
+    --validate //Use to just validate readiness of both cdm before link, Work the same with `validate --build`
+
+
+vocab
+    """
+    This command require additional sub-command as below:
+    
+    info, load
+    """
+    info
+        """
+        Report list of vocab registered in designated instace
+        """
+        --instance cdm_a , cdm_b , temp | default: cdm_a
+    load
+        """
+        From the directory, Load those csv of vocab into designated instance
+        """
+        --instance cdm_a , cdm_b | default: cdm_a
+        --full-refresh
+
+validate
+    """
+    To validate the schema correctness and CDM constraint, also linkage consistency.
+    """
+    --instance cdm_a , cdm_b , temp | default: cdm_a
+    --build //Use to validate the readiness of both cdm for linkage, Work the same with `build --validate`
+    
+
+backup
+    """
+    Clone ATLAS DB the configuration and user footprints information to temp db.
+    """
+    --force //ignore prompt, in case of previous backup exist.
+
+
+restore
+    """
+    From temp db, restore those configuration and user footprints information back to ATLAS DB.
+    """
+    --force //ignore prompt, in case of

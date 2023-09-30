@@ -6,7 +6,7 @@ omop:
       method: none
       user: "{{ env_var('PODMAN_DBT_USER') }}"
       host: trino # Use container name as URL
-      port: 8080
+      port: "{{ env_var('TRINO_EXPOSE_PORT') }}"
       database: cdm
       schema: dbt
     synthea:
@@ -14,7 +14,7 @@ omop:
       method: none
       user: "{{ env_var('PODMAN_DBT_USER') }}"
       host: trino # Use container name as URL
-      port: 8080
+      port: "{{ env_var('TRINO_EXPOSE_PORT') }}"
       database: cdm
       schema: synthea
       retries: 30

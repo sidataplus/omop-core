@@ -1,0 +1,13 @@
+
+
+services:
+  spark:
+    container_name: spark
+    build:
+      context: .
+      dockerfile: Spark.Dockerfile
+    tty: true
+    ## Using Apache Spark in Scala terminal:
+    command: [ "/opt/spark/bin/spark-shell" ]
+    # ## Using Apache Spark in Python terminal:
+    # command: [ "/opt/spark/bin/pyspark" ]
