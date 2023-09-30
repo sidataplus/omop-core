@@ -5,10 +5,6 @@ services:
       file: ../module/TCELS/OMOP/omop-compose.yaml
       service: crosspipe-pg
     container_name: crosspipe-pg
-    environment:
-      - POSTGRES_USER=crosspipe
-      - POSTGRES_PASSWORD=P@ssw0rd
-      - POSTGRES_DB=crosspipe
     volumes:
       - crosspipe-db:/var/lib/postgresql/data
       - ../../dwh/postgresql.conf:/etc/postgresql.conf

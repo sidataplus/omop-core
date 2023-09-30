@@ -2,7 +2,7 @@
 echo "      ____              __ "
 echo "     / __/__  ___ _____/ /__ "
 echo "    _\ \/ _ \/ _ \`/ __/  '_/ "
-echo "   /__ / .__/\_,_/_/ /_/\_\   , CrossPipe Edited "
+echo "   /__ / .__/\_,_/_/ /_/\_\   , CrossPipe Extended "
 echo "      /_/ "
 echo " "
 echo "Welcome to CrossPipe Tool"

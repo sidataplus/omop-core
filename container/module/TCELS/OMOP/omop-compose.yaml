@@ -29,9 +29,9 @@ services:
     command: postgres -c config_file=/etc/postgresql.conf
     shm_size: '2g'
     environment:
-      - POSTGRES_USER=${OMOP_PG_USER}
-      - POSTGRES_PASSWORD=${OMOP_PG_PW}
-      - POSTGRES_DB=${OMOP_PG_DB} #optional (specify default database instead of $OMOP_PG_DB)
+      - POSTGRES_USER=crosspipe
+      - POSTGRES_PASSWORD=P@ssw0rd
+      - POSTGRES_DB=crosspipe #optional (specify default database instead of $OMOP_PG_DB)
     ports:
       - ${CROSSPIPE_PG_PORT}:5432
     restart: always

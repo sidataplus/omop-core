@@ -1,0 +1,21 @@
+omop:
+  target: synthea
+  outputs:
+    dev:
+      type: trino
+      method: none
+      user: "{{ env_var('PODMAN_DBT_USER') }}"
+      host: trino # Use container name as URL
+      port: "{{ env_var('TRINO_EXPOSE_PORT') }}"
+      database: cdm
+      schema: dbt
+    synthea:
+      type: trino
+      method: none
+      user: "{{ env_var('PODMAN_DBT_USER') }}"
+      host: trino # Use container name as URL
+      port: "{{ env_var('TRINO_EXPOSE_PORT') }}"
+      database: cdm
+      schema: synthea
+      retries: 30
+      threads: 1
