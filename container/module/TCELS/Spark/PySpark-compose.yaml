@@ -10,19 +10,7 @@ services:
     tty: true
     ## command to run bash script using sh then use bash terminal:
     command: [ "/bin/bash", "-c", "cd /opt/spark/crosspipe && sh /opt/spark/crosspipe/wod.sh && /bin/bash" ]
-
-
-    # command: [ "sh", "/opt/spark/python/pyspark/startup.sh" ]
-    # command: [ "/opt/spark/bin/pyspark" ]
-    # command: [ "/opt/spark/bin/spark-submit", "/opt/spark/python/pyspark/inject.py" ]
-    # command: [ "python3", "/opt/spark/python/pyspark/start_inject.py" ]
-    ## python3 /opt/spark/python/pyspark/start_inject.py
-    # command: [""]
     volumes:
-      # - ./inject.py:/opt/spark/python/pyspark/inject.py:ro
-      # - ./start_inject.py:/opt/spark/python/pyspark/start_inject.py:ro
-      # - ./start_inject.sh:/opt/spark/python/pyspark/start_inject.sh:ro
-      # - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
       - ./src/crosspipe/:/opt/spark/crosspipe/:ro
     environment:
       SPARK_DRIVER_MEMORY: ${SPARK_DRIVER_MEMORY:-2} # In GB

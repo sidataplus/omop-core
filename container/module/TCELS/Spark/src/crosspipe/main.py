@@ -27,32 +27,32 @@ def transfer(
         print("Transfer Canceled")
 
 
-@app.command()
-def build():
-    """
-    Completly transfer all temp instance of OMOP to analytics instance
+# @app.command()
+# def build():
+#     """
+#     Completly transfer all temp instance of OMOP to analytics instance
 
-    Error raised if pre-validate is failed, use --force to bypass this
-    """
-    print("build: Working on it")
+#     Error raised if pre-validate is failed, use --force to bypass this
+#     """
+#     print("build: Working on it")
 
 
-@app.command()
-def vocab():
-    """
-    This command require additional sub-command as below:
+# @app.command()
+# def vocab():
+#     """
+#     This command require additional sub-command as below:
     
-    info, load
-    """
-    print("vocab: Working on it")
+#     info, load
+#     """
+#     print("vocab: Working on it")
 
 
-@app.command()
-def validate():
-    """
-    To validate the schema correctness and CDM constraint, also linkage consistency.
-    """
-    print("validate: Working on it")
+# @app.command()
+# def validate():
+#     """
+#     To validate the schema correctness and CDM constraint, also linkage consistency.
+#     """
+#     print("validate: Working on it")
 
 
 @app.command()

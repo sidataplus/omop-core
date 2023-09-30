@@ -1,4 +1,9 @@
 ## echo welcome text
+echo "      ____              __ "
+echo "     / __/__  ___ _____/ /__ "
+echo "    _\ \/ _ \/ _ \`/ __/  '_/ "
+echo "   /__ / .__/\_,_/_/ /_/\_\   , CrossPipe Edited "
+echo "      /_/ "
 echo " "
 echo "Welcome to CrossPipe Tool"
 echo "To learn more about CrossPipe, please use \`python3 main.py --help\`"
