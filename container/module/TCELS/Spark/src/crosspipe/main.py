@@ -1,42 +1,30 @@
-# import typer
-
-
-# def main(name: str, lastname: str = "", formal: bool = False):
-#     """
-#     Say hi to NAME, optionally with a --lastname.
-
-#     If --formal is used, say hi very formally.
-#     """
-#     if formal:
-#         print(f"Good day Ms. {name} {lastname}.")
-#     else:
-#         print(f"Hello {name} {lastname}")
-
-
-# if __name__ == "__main__":
-#     typer.run(main)
-
-
 import typer
 import subprocess
 import os
+import typing_extensions
 
 
 app = typer.Typer(add_completion=False, help="CrossPipe CLI for OMOP ETL")
 
 
 @app.command()
-def transfer():
+def transfer(
+    source: typing_extensions.Annotated[str, typer.Argument(help="Accept value is ['OMOP', 'ATLAS', 'CROSSPIPE']")] = "OMOP", 
+    target: typing_extensions.Annotated[str, typer.Argument(help="Accept value is ['OMOP', 'ATLAS', 'CROSSPIPE']")] = "ATLAS",
+    force: typing_extensions.Annotated[
+        bool, typer.Option(prompt=f"Are you sure to overwrite the target?")
+    ] = False,
+):
     """
-    Transfer data from source to target, Where cdm_a and cdm_b pre-defined
+    Transfer data from source to target
 
-    Use command build to combine both cdm_a and cdm_b to temp
-
-    ### Development: beta-crosspipeline-transfer:
-
-    #   Working with JDBC_SOURCE and JDBC_TARGET as cdm_a and cdm_b
+    ## WIP: Use command build to combine both cdm_a and cdm_b to temp
     """
-    subprocess.call(['/opt/spark/bin/spark-submit', '--driver-memory', str(int(os.environ['SPARK_DRIVER_MEMORY'])*2)+'g', 'transfer.py'])
+    if force:
+        print(f"Transfering data from {source} to {target}")
+        subprocess.call(['/opt/spark/bin/spark-submit', '--driver-memory', str(int(os.environ['SPARK_DRIVER_MEMORY'])*2)+'g', 'transfer.py', source, target])
+    else:
+        print("Transfer Canceled")
 
 
 @app.command()

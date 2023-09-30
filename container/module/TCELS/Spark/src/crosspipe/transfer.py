@@ -10,6 +10,7 @@ import time
 import threading
 from pyspark.sql import SparkSession
 import os
+import sys
 
 
 # Initialize a Spark session
@@ -20,22 +21,28 @@ spark = SparkSession.builder \
 # spark = SparkSession.builder.appName("ETL").config('spark.ui.showConsoleProgress', 'true').getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
+# Get the source and target instance from command line
+# In this use case, parameters are provided from CrossPipe CLI
+# If not provided, use OMOP and ATLAS as default
+source_instance=sys.argv[1]
+target_instance=sys.argv[2]
+
 # Define the JDBC connection properties for source and target databases
 source_properties = {
-    "url": os.environ['JDBC_OMOP_URL'],
-    "user": os.environ['JDBC_OMOP_USERNAME'],
-    "password": os.environ['JDBC_OMOP_PASSWORD'],
-    "schema_cdm": os.environ['JDBC_OMOP_SCHEMA_CDM'],
-    "schema_vocab": os.environ['JDBC_OMOP_SCHEMA_VOCAB'],
+    "url": os.environ[f'JDBC_{source_instance}_URL'],
+    "user": os.environ[f'JDBC_{source_instance}_USERNAME'],
+    "password": os.environ[f'JDBC_{source_instance}_PASSWORD'],
+    "schema_cdm": os.environ[f'JDBC_{source_instance}_SCHEMA_CDM'],
+    "schema_vocab": os.environ[f'JDBC_{source_instance}_SCHEMA_VOCAB'],
     "driver": "org.postgresql.Driver"
 }
 
 target_properties = {
-    "url": os.environ['JDBC_ATLAS_URL'],
-    "user": os.environ['JDBC_ATLAS_USERNAME'],
-    "password": os.environ['JDBC_ATLAS_PASSWORD'],
-    "schema_cdm": os.environ['JDBC_ATLAS_SCHEMA_CDM'],
-    "schema_vocab": os.environ['JDBC_ATLAS_SCHEMA_VOCAB'],
+    "url": os.environ[f'JDBC_{target_instance}_URL'],
+    "user": os.environ[f'JDBC_{target_instance}_USERNAME'],
+    "password": os.environ[f'JDBC_{target_instance}_PASSWORD'],
+    "schema_cdm": os.environ[f'JDBC_{target_instance}_SCHEMA_CDM'],
+    "schema_vocab": os.environ[f'JDBC_{target_instance}_SCHEMA_VOCAB'],
     "driver": "org.postgresql.Driver"
 }
 

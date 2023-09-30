@@ -25,24 +25,22 @@ services:
       # - ./startup.sh:/opt/spark/python/pyspark/startup.sh:ro
       - ./src/crosspipe/:/opt/spark/crosspipe/:ro
     environment:
-      SPARK_DRIVER_MEMORY: 2 # In GB
-      JDBC_OMOP_URL: "jdbc:postgresql://omop-pg:5432/omop_yourorg"
-      JDBC_OMOP_USERNAME: "omopuser"
-      JDBC_OMOP_PASSWORD: "P@ssw0rd"
-      JDBC_OMOP_SCHEMA_CDM: "synthea"
-      JDBC_OMOP_SCHEMA_VOCAB: "vocab"
-
-      JDBC_ATLAS_URL: "jdbc:postgresql://ohdsi-webapi-pg:5432/webtools"
-      JDBC_ATLAS_USERNAME: "postgres"
-      JDBC_ATLAS_PASSWORD: "mypass"
-      JDBC_ATLAS_SCHEMA_CDM: "cdm"
-      JDBC_ATLAS_SCHEMA_VOCAB: "vocab"
-
-      JDBC_CROSSPIPE_URL: "jdbc:postgresql://crosspipe-pg:5432/crosspipe"
-      JDBC_CROSSPIPE_USERNAME: "crosspipe"
-      JDBC_CROSSPIPE_PASSWORD: "P@ssw0rd"
-      JDBC_CROSSPIPE_SCHEMA_CDM: "cdm"
-      JDBC_CROSSPIPE_SCHEMA_VOCAB: "vocab"
+      SPARK_DRIVER_MEMORY: ${SPARK_DRIVER_MEMORY:-2} # In GB
+      JDBC_OMOP_URL: ${JDBC_OMOP_URL}
+      JDBC_OMOP_USERNAME: ${JDBC_OMOP_USERNAME}
+      JDBC_OMOP_PASSWORD: ${JDBC_OMOP_PASSWORD}
+      JDBC_OMOP_SCHEMA_CDM: ${JDBC_OMOP_SCHEMA_CDM}
+      JDBC_OMOP_SCHEMA_VOCAB: ${JDBC_OMOP_SCHEMA_VOCAB}
+      JDBC_ATLAS_URL: ${JDBC_ATLAS_URL}
+      JDBC_ATLAS_USERNAME: ${JDBC_ATLAS_USERNAME}
+      JDBC_ATLAS_PASSWORD: ${JDBC_ATLAS_PASSWORD}
+      JDBC_ATLAS_SCHEMA_CDM: ${JDBC_ATLAS_SCHEMA_CDM}
+      JDBC_ATLAS_SCHEMA_VOCAB: ${JDBC_ATLAS_SCHEMA_VOCAB}
+      JDBC_CROSSPIPE_URL: ${JDBC_CROSSPIPE_URL}
+      JDBC_CROSSPIPE_USERNAME: ${JDBC_CROSSPIPE_USERNAME}
+      JDBC_CROSSPIPE_PASSWORD: ${JDBC_CROSSPIPE_PASSWORD}
+      JDBC_CROSSPIPE_SCHEMA_CDM: ${JDBC_CROSSPIPE_SCHEMA_CDM}
+      JDBC_CROSSPIPE_SCHEMA_VOCAB: ${JDBC_CROSSPIPE_SCHEMA_VOCAB}
     
     networks:
       - omop-cloudbuild
