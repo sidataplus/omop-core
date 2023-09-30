@@ -22,20 +22,20 @@ spark.sparkContext.setLogLevel("WARN")
 
 # Define the JDBC connection properties for source and target databases
 source_properties = {
-    "url": os.environ['JDBC_SOURCE_URL'],
-    "user": os.environ['JDBC_SOURCE_USERNAME'],
-    "password": os.environ['JDBC_SOURCE_PASSWORD'],
-    "schema_cdm": os.environ['JDBC_SOURCE_SCHEMA_CDM'],
-    "schema_vocab": os.environ['JDBC_SOURCE_SCHEMA_VOCAB'],
+    "url": os.environ['JDBC_OMOP_URL'],
+    "user": os.environ['JDBC_OMOP_USERNAME'],
+    "password": os.environ['JDBC_OMOP_PASSWORD'],
+    "schema_cdm": os.environ['JDBC_OMOP_SCHEMA_CDM'],
+    "schema_vocab": os.environ['JDBC_OMOP_SCHEMA_VOCAB'],
     "driver": "org.postgresql.Driver"
 }
 
 target_properties = {
-    "url": os.environ['JDBC_TARGET_URL'],
-    "user": os.environ['JDBC_TARGET_USERNAME'],
-    "password": os.environ['JDBC_TARGET_PASSWORD'],
-    "schema_cdm": os.environ['JDBC_TARGET_SCHEMA_CDM'],
-    "schema_vocab": os.environ['JDBC_TARGET_SCHEMA_VOCAB'],
+    "url": os.environ['JDBC_ATLAS_URL'],
+    "user": os.environ['JDBC_ATLAS_USERNAME'],
+    "password": os.environ['JDBC_ATLAS_PASSWORD'],
+    "schema_cdm": os.environ['JDBC_ATLAS_SCHEMA_CDM'],
+    "schema_vocab": os.environ['JDBC_ATLAS_SCHEMA_VOCAB'],
     "driver": "org.postgresql.Driver"
 }
 
